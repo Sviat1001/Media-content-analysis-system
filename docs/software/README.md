@@ -3,7 +3,7 @@
 В рамках проекту розробляється: 
 ## SQL-скрипт для створення на початкового наповнення бази даних
 
-```sql
+```query
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
@@ -214,3 +214,148 @@ COMMIT;
 
 ## RESTfull сервіс для управління даними
 
+### Точка входу проєкту
+
+```
+'use strict'
+const express = require('express');
+const bodyParser = require('body-parser');
+const config = require('./yaml-config.js')('./service.config.yml');
+const app = express();
+/*app.use(function (request, response, next) {
+  console.log(response);
+  next();
+});*/
+app.use(bodyParser.text());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use('/query', require('./routes/query.js'));
+app.listen(config.service.port, () => {
+  console.log(`http://localhost:${config.service.port}/`);
+});
+```
+
+### Конфігураційний файл проєкту
+
+```
+service:
+  name: MyServer
+  port: 8080
+db:
+  host: localhost
+  dbName: mydb
+  userName: root
+  userPassword: a7z0032
+  dialect: mysql
+```
+
+### API взаємодії з конфігурацією
+
+```
+'use strict'
+const yaml = require("js-yaml");
+const fs = require("fs");
+function loadConfig(file) {
+  try {
+    return yaml.load(fs.readFileSync(file, 'utf8'));
+  } catch (e) {
+    console.log(e);
+  }
+}
+module.exports = loadConfig;
+```
+
+### API взаємодії з базою даних
+
+```
+'use strict'
+const mysql = require('mysql2/promise');
+const config = require('../yaml-config.js')('./service.config.yml');
+const executeSql = async (query, values) => {
+  let connection;
+  let sqlStatement;
+  try {
+    connection = await mysql.createConnection({
+      host: config.db.host,
+      user: config.db.userName,
+      password: config.db.userPassword,
+      database: config.db.dbName,
+      namedPlaceholders: true,
+    });
+    sqlStatement = connection.format(query, values);
+    const [results] = await connection.execute(sqlStatement);
+    return results;
+  }
+  catch (e) {
+    throw new Error(`${e.toString()}`);
+  } finally {
+    if(connection) connection.end();
+  }
+}
+module.exports = { executeSql };
+```
+
+### Контролер маршруту "/query"
+
+```
+'use strict'
+const express = require('express');
+const { executeSql } = require('./routes.js');
+const query = {
+  createQuery: `INSERT INTO query (title, user_id, role_id, source_id) VALUE (:title, :user_id, :role_id, :source_id)`,
+  readQuery: `SELECT * FROM query WHERE id = :id`,
+  readAllQueries: `SELECT * FROM query`,
+  updateQuery: `UPDATE query SET title = :title, user_id = :user_id, role_id = :role_id, source_id = :source_id WHERE id = :id`,
+  deleteQuery: `DELETE FROM query WHERE id = :id`,
+};
+const router = new express.Router();
+router.post('/', async (req, res) => {
+  try {
+    await executeSql(query.createQuery, req.body);
+    let result = await executeSql(query.readQuery, req.params);
+    res.status(200).send(result);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).send(`Something bad happened...`);
+  }
+});
+router.get('/', async (req, res) => {
+  try {
+    let result = await executeSql(query.readAllQueries, req.params);
+    res.status(200).send(result);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).send(`Something bad happened...`);
+  }
+});
+router.get('/:id', async (req, res) => {
+  try {
+    let result = await executeSql(query.readQuery, req.params);
+    res.status(200).send(result);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).send(`Something bad happened...`);
+  }
+});
+router.put('/:id', async (req, res) => {
+  try {
+    await executeSql(query.updateQuery, { ...req.body, ...req.params });
+    let result = await executeSql(query.readQuery, req.params);
+      res.status(200).send(result);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).send(`Something bad happened...`);
+  }
+});
+router.delete('/:id', async (req, res) => {
+  try {
+    let result = await executeSql(query.readQuery, req.params);
+    await executeSql(query.deleteQuery, req.params);
+    res.status(200).send(result);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).send(`Something bad happened...`);
+  }
+});
+module.exports = router;
+```
