@@ -676,7 +676,7 @@ GUI:
 
 Oracle Developer Tool:
 
--   <http://www.oracle.com/technetwork/developer-tools/sql-developer/downloads/index.html>
+-   <http://www.oracle.com/technetwork/developer-tools/query-developer/downloads/index.html>
 
 **Приклад інсталяції**
 
@@ -750,7 +750,7 @@ Oracle Developer Tool:
 Для встановлення Oracle Developer Tool:
 
 1.  Завантажити з сайту
-    [html](http://www.oracle.com/technetwork/developer-tools/sql-developer/downloads/index.html)
+    [html](http://www.oracle.com/technetwork/developer-tools/query-developer/downloads/index.html)
     архів з програмою (Примітка. Для того, щоб мати змогу завантажити, потрібно
     зареєструватись на сайті Oracle). Програма працює за умови,що на комп’ютері
     встановлена JDK 1.6.0_11 або вище. Завантажити JDK можна за цією адресою:
@@ -857,7 +857,7 @@ RENAME, MySQL завжди буде створювати тимчасову та
 ![](media/3017ca65095f1270bb16d35bf6092c0a.png)
 
 **Скрипт**
-```sql
+```query
 -- MySQL Workbench Forward Engineering
 SET \@OLD_UNIQUE_CHECKS=\@\@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET \@OLD_FOREIGN_KEY_CHECKS=\@\@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
@@ -1005,7 +1005,7 @@ ENGINE = InnoDB;
 з таблиці вище.
 
 Ми використаємо команду SELECT таким чином:
-```sql
+```query
 SELECT LastName,FirstName FROM Persons
 ```
 В результаті отримаємо:
@@ -1029,7 +1029,7 @@ SELECT LastName,FirstName FROM Persons
 Тепер ми хочемо оновити персону " TjessemJakob " в таблиці " Persons ".
 
 Ми використовуємо такі команди SQL:
-```sql
+```query
 UPDATE Persons  
 SET Address='Nissestien 67', City='Sandnes'  
 WHERE LastName='Tjessem' AND FirstName='Jakob'
@@ -1053,7 +1053,7 @@ WHERE LastName='Tjessem' AND FirstName='Jakob'
 | 3    | Pettersen | Kari      | Storgt 20    | Stavanger |
 
 Треба вставити новий рядок в таблицю "Persons".
-```sql
+```query
 INSERT INTO Persons  
 VALUES (4,'Nilsen', 'Johan', 'Bakken 2', 'Stavanger')
 ```
