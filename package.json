@@ -3,7 +3,7 @@
   "version": "2.1.0",
   "main": "index.js",
   "description": "Databases course work template",
-  "repository": "https://github.com/dan1rock/Media-content-analysis-system",
+  "repository": "https://github.com/Sviat1001/Media-content-analysis-system",
   "author": "Andrey Boldak <boldak.andrey@gmail.com>",
   "license": "ECL 2.0",
   "scripts": {
@@ -14,7 +14,12 @@
   "dependencies": {
     "@vuepress/plugin-back-to-top": "^1.7.1",
     "@vuepress/plugin-pwa": "^1.7.1",
-    "vuepress": "^1.7.1"
+    "vuepress": "^1.7.1",
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
+    "js-yaml": "^4.1.0",
+    "lodash": "^4.17.21",
+    "mysql2": "^3.0.1"
   },
   "devDependencies": {
     "vuepress-theme-cool": "^1.3.1"
