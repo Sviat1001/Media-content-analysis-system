@@ -1,0 +1,10 @@
+service:
+  name: MyServer
+  port: 8080
+
+db:
+  host: localhost
+  dbName: mydb
+  userName: root
+  userPassword: a7z0032
+  dialect: mysql
