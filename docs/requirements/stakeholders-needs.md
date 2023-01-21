@@ -28,13 +28,13 @@
 ### Основні визначення та скорочення
 
 Див. 
-[**Основні визначення**](https://dan1rock.github.io/Media-content-analysis-system/requirements/state-of-the-art.html#основні-визначення)
+[**Основні визначення**](https://Sviat1001.github.io/Media-content-analysis-system/requirements/state-of-the-art.html#основні-визначення)
 
 
 ### Посилання
 
 Див. 
-[**Посилання**](https://dan1rock.github.io/Media-content-analysis-system/requirements/state-of-the-art.html#висновки)
+[**Посилання**](https://Sviat1001.github.io/Media-content-analysis-system/requirements/state-of-the-art.html#висновки)
 
 
 ## Короткий зміст
